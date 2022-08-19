@@ -33,7 +33,6 @@ func ConnectedComponents(bias [][]int, n int) int {
 	return g.sccCount
 }
 
-// IsInSameConnectedComponents 与顶点v属于同一连通分量的所有顶点
 func IsInSameConnectedComponents(a int, b int) bool {
 	// todo: this can be easy implement by using sccID in Graph after scc run
 	return false
