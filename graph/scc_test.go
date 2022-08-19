@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestConnectedComponents(t *testing.T) {
+func TestKosarajuCalcSCC(t *testing.T) {
 	type args struct {
 		bias [][]int
 		n    int
@@ -36,8 +36,8 @@ func TestConnectedComponents(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ConnectedComponents(tt.args.bias, tt.args.n); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ConnectedComponents() = %v, want %v", got, tt.want)
+			if got := KosarajuCalcSCC(tt.args.bias, tt.args.n); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("KosarajuCalcSCC() = %v, want %v", got, tt.want)
 			}
 		})
 	}
