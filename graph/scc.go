@@ -3,7 +3,8 @@ package graph
 import "datastruct_algorithm/stl"
 
 // Strong Connected Component 强连通分量
-// Kosaraju 算法求强连通分量 参考：https://www.cnblogs.com/nullzx/p/6437926.html
+// 1. Kosaraju 算法求有向图强连通分量 参考：https://www.cnblogs.com/nullzx/p/6437926.html
+// 2. DFS 求无向图连通分量
 
 func ConnectedComponents(bias [][]int, n int) int {
 	// bias means all edges: []{{from, to},{from, to}}
@@ -83,4 +84,33 @@ func (g *Graph) reversePostOrderDFSHelper(i int, visited []bool, stk stl.Stack) 
 		}
 		stk.Push(i) // post order
 	}
+}
+
+// DFS 求无向图连通分量
+// DFS 应用：求连通分量以及每个点所属的连通分量 (Connected Component, CC)
+// 注意: 这里sccIDs 的值从 1 开始，用0来初始化并表示还未访问
+
+func CalcSCC(g [][]int, n int) (comps [][]int, sccIDs []int) {
+	sccIDs = make([]int, n)
+	idCnt := 0 // 也可以去掉，用 len(comps)+1 代替
+	var comp []int
+	var f func(int)
+	f = func(v int) {
+		sccIDs[v] = idCnt
+		comp = append(comp, v)
+		for _, w := range g[v] {
+			if sccIDs[w] == 0 { //初始化为0，表示未被访问
+				f(w)
+			}
+		}
+	}
+	for i, id := range sccIDs {
+		if id == 0 {
+			idCnt++
+			comp = []int{}
+			f(i)
+			comps = append(comps, comp)
+		}
+	}
+	return
 }
