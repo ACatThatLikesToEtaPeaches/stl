@@ -5,6 +5,7 @@ import "datastruct_algorithm/stl"
 // Strong Connected Component 强连通分量
 //  1. Tarjan 算法求强连通分量 参考自：https://oi-wiki.org/graph/scc/
 //	2. Kosaraju 算法求有向图强连通分量 参考自：https://www.cnblogs.com/nullzx/p/6437926.html
+//   注：它们的时间复杂度都是O(n+m)常数级的, 不过常数大小 Tarjan < Kosaraju < Garbow（在 AtCoder 上的测试显示，5e5 的数据下 Tarjan 比 Kosaraju 快了约 100ms）
 
 func TarjanCalcSCC(bias [][]int, n int) (comps [][]int, sccid []int) {
 	//	dfn[v] ：深度优先搜索遍历时结点 v 被搜索的次序。
