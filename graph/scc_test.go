@@ -13,7 +13,8 @@ func TestKosarajuCalcSCC(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want int
+		wantComps [][]int
+		wantSccid []int
 	}{
 		{
 			name: "happy",
@@ -31,13 +32,23 @@ func TestKosarajuCalcSCC(t *testing.T) {
 				},
 				n: 10,
 			},
-			want: 4,
+			wantComps: [][]int{{2, 7, 9}, {0, 1, 5, 8}, {3, 4}, {6}},
+			wantSccid: []int{2, 2, 3, 1, 1, 2, 0, 3, 2, 3},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := KosarajuCalcSCC(tt.args.bias, tt.args.n); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("KosarajuCalcSCC() = %v, want %v", got, tt.want)
+			gotComps, gotSccid := KosarajuCalcSCC(tt.args.bias, tt.args.n)
+			if !reflect.DeepEqual(gotComps, tt.wantComps) {
+				t.Errorf("KosarajuCalcSCC() gotComps = %v, want %v", gotComps, tt.wantComps)
+			}
+			if !reflect.DeepEqual(gotSccid, tt.wantSccid) {
+				t.Errorf("KosarajuCalcSCC() gotSccid = %v, want %v", gotSccid, tt.wantSccid)
+			}
+
+			gotComps2, _ := TarjanCalcSCC(tt.args.bias, tt.args.n)
+			if !reflect.DeepEqual(len(gotComps2), len(tt.wantComps)) {
+				t.Errorf("TarjanCalcSCC() gotComps = %v, want %v", gotComps2, tt.wantComps)
 			}
 		})
 	}
