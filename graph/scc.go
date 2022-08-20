@@ -39,14 +39,12 @@ func TarjanCalcSCC(bias [][]int, n int) (comps [][]int, sccid []int) {
 		}
 		if dfn[v] == low[v] { // 当 v 是连通量的subRoot，把栈里面 v 前面的元素全部取出 作为一个 comp
 			comp := []int{}
-			for {
-				w := stk[len(stk)-1]
+			for stk[len(stk)-1] != v {
+				stktop := stk[len(stk)-1]
 				stk = stk[:len(stk)-1] // stk.Pop
-				inStk[w] = false
-				comp = append(comp, w)
-				if w == v {
-					break
-				}
+				inStk[stktop] = false
+
+				comp = append(comp, stktop)
 			}
 			comps = append(comps, comp)
 		}
@@ -65,7 +63,7 @@ func TarjanCalcSCC(bias [][]int, n int) (comps [][]int, sccid []int) {
 		comps[i], comps[n-1-i] = comps[n-1-i], comps[i]
 	}
 
-	sccid = make([]int, len(g))
+	sccid = make([]int, n)
 	for i, cp := range comps {
 		for _, v := range cp {
 			sccid[v] = i

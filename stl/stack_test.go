@@ -9,11 +9,11 @@ import (
 func TestNewStack(t *testing.T) {
 	tests := []struct {
 		name string
-		want *Stack
+		want *stackListImpl
 	}{
 		{
 			name: "happy",
-			want: &Stack{list: list.New().Init()},
+			want: &stackListImpl{list: list.New().Init()},
 		},
 	}
 	for _, tt := range tests {
@@ -53,7 +53,7 @@ func TestStack_Empty(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &Stack{
+			s := &stackListImpl{
 				list: tt.fields.list,
 			}
 			if got := s.Empty(); got != tt.want {
@@ -96,85 +96,12 @@ func TestStack_Pop(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &Stack{
+			s := &stackListImpl{
 				list: tt.fields.list,
 			}
 			s.Pop()
 			if got := s.Empty(); got != tt.expectEmpty {
 				t.Errorf("AfterPop() = %v, want %v", got, tt.expectEmpty)
-			}
-		})
-	}
-}
-
-func TestStack_Push(t *testing.T) {
-	type fields struct {
-		list *list.List
-	}
-	type args struct {
-		v interface{}
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   interface{}
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			s := &Stack{
-				list: tt.fields.list,
-			}
-			if got := s.Push(tt.args.v); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Push() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestStack_Size(t *testing.T) {
-	type fields struct {
-		list *list.List
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		want   int
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			s := &Stack{
-				list: tt.fields.list,
-			}
-			if got := s.Size(); got != tt.want {
-				t.Errorf("Size() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestStack_Top(t *testing.T) {
-	type fields struct {
-		list *list.List
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		want   interface{}
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			s := &Stack{
-				list: tt.fields.list,
-			}
-			if got := s.Top(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Top() = %v, want %v", got, tt.want)
 			}
 		})
 	}
