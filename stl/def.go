@@ -1,7 +1,9 @@
 package stl
 
-const INF = 0x3f3f3f3f
+import "math"
 
+const BIGINT = 0x3f3f3f3f
+const MAXINT = math.MaxInt32
 
 func Max(a, b int) int {
 	if a > b {
