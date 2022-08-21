@@ -49,7 +49,6 @@ func TarjanCalcSCC(bias [][]int, n int) (comps [][]int, sccid []int) {
 			}
 			comps = append(comps, comp)
 		}
-		return
 	}
 
 	for v, timestamp := range dfn {
@@ -74,7 +73,6 @@ func TarjanCalcSCC(bias [][]int, n int) (comps [][]int, sccid []int) {
 	return comps, sccid
 }
 
-
 func KosarajuCalcSCC(bias [][]int, n int) (comps [][]int, sccIDs []int) {
 	// bias means all edges: []{{from, to},{from, to}}
 	graph := make([][]int, n) // 临接表表示图
@@ -83,18 +81,43 @@ func KosarajuCalcSCC(bias [][]int, n int) (comps [][]int, sccIDs []int) {
 		graph[from] = append(graph[from], to)
 	}
 	sccID := make([]int, n) // 用于标记每个顶点属于哪个连通分量,从0开始
-
 	g := &Graph{adjTable: graph, sccID: sccID, nodeCount: n}
+
 	// Step1: 对原图取反，从任意一个顶点开始对反向图进行逆后序DFS遍历
-	stk := g.reverse().getOneReversePostOrderStack()
+	rg := g.reverse()
+	stk := stl.NewStack()
+	visited := make([]bool, rg.nodeCount)
+	var dfs1 func(i int)
+	dfs1 = func(i int) {
+		if !visited[i] {
+			visited[i] = true
+			for _, nxt := range rg.adjTable[i] {
+				dfs1(nxt)
+			}
+			stk.Push(i) // post order result
+		}
+	}
+	for i := 0; i < rg.nodeCount; i++ { // dfs1求逆后序遍历栈
+		dfs1(i)
+	}
 
 	// Step2: 按照逆后续遍历中栈中的顶点出栈顺序，对原图进行DFS遍历，一次DFS遍历中访问的所有顶点都属于同一强连通分量。
-	visited := make([]bool, n)
+	visited = make([]bool, n)
+	var dfs2 func(i int)
+	dfs2 = func(i int) {
+		if !visited[i] {
+			visited[i] = true
+			g.sccID[i] = g.sccCount
+			for _, nxt := range g.adjTable[i] {
+				dfs2(nxt)
+			}
+		}
+	}
 	for !stk.Empty() {
 		cur := stk.Top().(int)
 		stk.Pop()
 		if !visited[cur] {
-			g.dfs2(cur, visited)
+			dfs2(cur)
 			g.sccCount++
 		}
 	}
@@ -128,34 +151,6 @@ func (g *Graph) reverse() *Graph {
 	}
 	return &Graph{adjTable: newAdjTable, sccID: g.sccID, nodeCount: g.nodeCount, sccCount: g.sccCount}
 }
-func (g *Graph) getOneReversePostOrderStack() stl.Stack { // 求逆后序遍历栈
-	stk := stl.NewStack()
-	visited := make([]bool, g.nodeCount)
-	for i := 0; i < g.nodeCount; i++ { // 这里默认从0开始，从任意节点开始DFS求逆后序栈都是合法的
-		g.dfs1(i, visited, stk)
-	}
-	return stk
-}
-
-func (g *Graph) dfs1(i int, visited []bool, stk stl.Stack) {
-	if !visited[i] {
-		visited[i] = true
-		for _, nxt := range g.adjTable[i] {
-			g.dfs1(nxt, visited, stk)
-		}
-		stk.Push(i) // post order result
-	}
-}
-
-func (g *Graph) dfs2(i int, visited []bool) {
-	if !visited[i] {
-		visited[i] = true
-		g.sccID[i] = g.sccCount
-		for _, nxt := range g.adjTable[i] {
-			g.dfs2(nxt, visited)
-		}
-	}
-}
 
 // DFS 求无向图连通分量
 // DFS 应用：求连通分量以及每个点所属的连通分量 (Connected Component, CC)
@@ -186,8 +181,10 @@ func DFSCalcSCC(g [][]int, n int) (comps [][]int, sccIDs []int) {
 	return
 }
 
-func min(a,b int) int {
-	if a < b {return a}
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
 	return b
 }
 
