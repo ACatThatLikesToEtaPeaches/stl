@@ -87,12 +87,8 @@ func BiDijkstra(weight [][]int, n int, start, end int) int {
 		fn, fd := fitem.id, fitem.dist
 		if rvisited[fn] {
 			fqmin, rqmin := 0, 0
-			if !fq.Empty() {
-				fqmin = fq.Top().(item).dist
-			}
-			if !rq.Empty() {
-				rqmin = rq.Top().(item).dist
-			}
+			if !fq.Empty() { fqmin = fq.Top().(item).dist }
+			if !rq.Empty() { rqmin = rq.Top().(item).dist }
 			if fd+distR[fn] <= fqmin+rqmin {
 				return fd + distR[fn]
 			}
@@ -129,7 +125,7 @@ func BiDijkstra(weight [][]int, n int, start, end int) int {
 					rq.Push(item{id: adjId, dist: rd + adjDist})
 				}
 			} else {
-				distF[adjId] = rd + adjDist
+				distR[adjId] = rd + adjDist
 				rq.Push(item{id: adjId, dist: rd + adjDist})
 				rvisited[adjId] = true
 			}
@@ -160,3 +156,5 @@ func (h heapImpl) Less(i, j int) bool    { return h[i].dist < h[j].dist }
 func (h heapImpl) Swap(i, j int)         { h[i], h[j] = h[j], h[i] }
 func (h *heapImpl) Push(v interface{})   { *h = append(*h, v.(item)) }
 func (h *heapImpl) Pop() (v interface{}) { a := *h; *h, v = a[:len(a)-1], a[len(a)-1]; return }
+func (h *heapImpl) push(vdPair item)     { heap.Push(h, vdPair) }
+func (h *heapImpl) pop() item            { return h.Pop().(item) }

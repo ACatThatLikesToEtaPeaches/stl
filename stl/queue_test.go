@@ -67,9 +67,7 @@ func TestQueue_Push(t *testing.T) {
 			q := &Queue{
 				list: tt.fields.list,
 			}
-			if got := q.Push(tt.args.v); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Push() = %v, want %v", got, tt.want)
-			}
+			q.Push(tt.args.v)
 		})
 	}
 }
